@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "682823770900",
+    "project_id": "delwiz",
+    "storage_bucket": "delwiz.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:682823770900:android:8000759709d3fa9b9a5801",
+        "android_client_info": {
+          "package_name": "com.example.delwiz"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAGmVjkmUqEdNGMN8WkytvzOditeP2ICg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

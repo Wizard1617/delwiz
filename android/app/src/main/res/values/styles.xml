@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Firebase config Values -->
+    <string name="google_app_id">1:682823770900:android:8000759709d3fa9b9a5801</string>
+    <string name="gcm_defaultSenderId">682823770900</string>
+    <string name="default_web_client_id">insert_your_default_web_client_id_here</string> <!-- Замените это значение, если оно вам необходимо -->
+    <string name="ga_trackingId">insert_your_ga_trackingId_here</string> <!-- Замените это значение, если оно вам необходимо -->
+    <string name="firebase_database_url">https://delwiz.firebaseio.com</string> <!-- При необходимости замените URL -->
+    <string name="google_api_key">AIzaSyDAGmVjkmUqEdNGMN8WkytvzOditeP2ICg</string>
+    <string name="google_crash_reporting_api_key">insert_your_google_crash_reporting_api_key_here</string> <!-- Замените это значение, если оно вам необходимо -->
+    <string name="project_id">delwiz</string>
+
+    <!-- Theme applied to the Android Window while the process is starting when the OS's Dark Mode setting is off -->
+    <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        <item name="android:windowBackground">@drawable/launch_background</item>
+    </style>
+
+    <!-- Theme applied to the Android Window as soon as the process has started.
+         This theme determines the color of the Android Window while your
+         Flutter UI initializes, as well as behind your Flutter UI while its
+         running.
+
+         This Theme is only used starting with V2 of Flutter's Android embedding. -->
+    <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        <item name="android:windowBackground">?android:colorBackground</item>
+    </style>
+</resources>
