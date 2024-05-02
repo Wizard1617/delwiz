@@ -66,7 +66,7 @@ class _FriendsPageWithTabsState extends State<FriendsPageWithTabs> with SingleTi
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.grey[700],
+                color: Colors.grey[700]?.withOpacity(0.4),
                 borderRadius: BorderRadius.circular(50.0),
               ),
               child: TabBar(

@@ -1,3 +1,5 @@
+import 'package:delwiz/Pages/Profile/AboutPage.dart';
+import 'package:delwiz/Pages/Profile/InfoPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -57,6 +59,10 @@ class _SettingsState extends State<Settings> {
             leading: Icon(Icons.person, color: Colors.deepOrangeAccent),
             title: Text('Аккаунт'),
             onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => InfoPage()),
+              );
               // Действие при нажатии: переход на страницу аккаунта
             },
           ),
@@ -64,6 +70,7 @@ class _SettingsState extends State<Settings> {
             leading: Icon(Icons.lock, color: Colors.deepOrangeAccent),
             title: Text('Приватность'),
             onTap: () {
+
               // Действие при нажатии: переход на страницу настроек приватности
             },
           ),
@@ -71,19 +78,14 @@ class _SettingsState extends State<Settings> {
             leading: Icon(Icons.info, color: Colors.deepOrangeAccent),
             title: Text('О приложении'),
             onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AboutPage()),
+              );
               // Действие при нажатии: переход на страницу о приложении
             },
           ),
           Divider(),
-          ListTile(
-            leading: Icon(themeProvider.getTheme().brightness == Brightness.dark ? Icons.dark_mode : Icons.wb_sunny),
-            title: Text('Сменить тему'),
-            onTap: () {
-              themeProvider.getTheme().brightness == Brightness.dark
-                  ? themeProvider.setLightTheme()
-                  : themeProvider.setDarkTheme();
-            },
-          ),
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('Выход'),

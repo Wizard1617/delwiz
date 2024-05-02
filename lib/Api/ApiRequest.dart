@@ -2,7 +2,8 @@ import 'package:dio/dio.dart';
 
 final dio = Dio();
 final http = HttpClientAdapter();
-String api = 'http://192.168.1.69:5108/api';
+
+String api = 'http://delwiz.somee.com/';
 var IDUser = '';
 
 

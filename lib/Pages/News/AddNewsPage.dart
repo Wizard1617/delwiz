@@ -340,12 +340,20 @@ class _AddNewsState extends State<AddNews> {
                       onPressed: () => _selectMedia('image'),
                       icon: Icon(Icons.image),
                       label: Text('Добавить фото'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey[700]?.withOpacity(0.4),
+                        foregroundColor: Colors.deepOrangeAccent,
+                      ),
                     ),
-                    SizedBox(width: 10), // Отступ между кнопками
+                    SizedBox(width: 35), // Отступ между кнопками
                     ElevatedButton.icon(
                       onPressed: () => _selectMedia('video'),
                       icon: Icon(Icons.videocam),
                       label: Text('Добавить видео'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey[700]?.withOpacity(0.4),
+                        foregroundColor: Colors.deepOrangeAccent,
+                      ),
                     ),
                   ],
                 ),
@@ -364,6 +372,10 @@ class _AddNewsState extends State<AddNews> {
               ElevatedButton(
                 onPressed: _addNews,
                 child: Text('Опубликовать'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey[700]?.withOpacity(0.4),
+                  foregroundColor: Colors.deepOrangeAccent,
+                ),
               ),
             ],
           ),
