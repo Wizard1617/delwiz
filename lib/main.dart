@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:delwiz/Api/ApiRequest.dart';
+import 'package:delwiz/Support/SupportPage.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -44,12 +46,13 @@ Future<void> backgroundHandler(RemoteMessage message) async {
     // Здесь можно выполнить дополнительные действия, если это необходимо
   }
 }
-
+String nameRole = '';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+  nameRole = prefs.getString('nameRole') ?? '';
   bool isDarkMode = prefs.getBool('darkMode') ?? false; // Загрузка сохраненной темы
   await Firebase.initializeApp();
   String channelId = "1622228238850543549";
@@ -81,18 +84,32 @@ void main() async {
     ChangeNotifierProvider<ThemeProvider>(
       create: (context) => ThemeProvider(initialTheme),
       child: OverlaySupport.global(
-        child: MyApp(isLoggedIn: isLoggedIn),
+        child:MyApp(isLoggedIn: isLoggedIn, nameRole: nameRole)
       ),
     ),
   );
   AuthenticatedApp().setupInteractions();
 }
 
+Widget _getHomeScreen(String nameRole) {
+  // Определяем какую страницу показывать на основе роли пользователя.
+  if (nameRole == "Блогер" || nameRole == "Модератор") {
+    return AuthenticatedApp(); // Ваша страница для Блогера или Модератора.
+  } else if (nameRole == "Специалист службы поддержки") {
+    return SupportPage(); // Ваша страница для Специалиста службы поддержки.
+  } else {
+    // Обработка других ролей или случаев.
+    return Authorization(); // Возвращаем страницу авторизации по умолчанию.
+  }
+}
+
 class MyApp extends StatelessWidget {
   final bool isLoggedIn;
   final PageStorageBucket bucket = PageStorageBucket();
 
-  MyApp({required this.isLoggedIn});
+  final String nameRole;
+
+   MyApp({required this.isLoggedIn, required this.nameRole});
 
 
   @override
@@ -105,7 +122,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: Provider.of<ThemeProvider>(context).getTheme(),
-      home: isLoggedIn ? AuthenticatedApp() : const Authorization(),
+      home: isLoggedIn ? _getHomeScreen(nameRole) : Authorization(),
     );
 
   }
@@ -157,6 +174,7 @@ class AuthenticatedApp extends StatelessWidget {
         recipientId: int.parse(recipientId),
         senderId: int.parse(senderId),
         nameUser: nameUser,
+        isSupport: false,
       )));
     }
   }

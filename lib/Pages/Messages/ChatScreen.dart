@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:delwiz/Pages/Messages/FullscreenVideoPlayer.dart';
 import 'package:delwiz/Pages/Messages/VideoWidget.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart' as path;
 
 import 'package:dio/dio.dart';
@@ -29,7 +30,9 @@ import '../FriendAndUsers/UserProfile.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-
+/*const String _baseFileUrl = "http://192.168.1.69:5108/";*/ // Замените на ваш базовый URL
+/*
+*/
 String newMessage = 'r';
 class ChatScreen extends StatefulWidget {
   final int senderId;
@@ -37,12 +40,16 @@ class ChatScreen extends StatefulWidget {
   final Uint8List? senderAvatar;
   final Uint8List? recipientAvatar;
   final String nameUser;
+  final bool isSupport;
+  final bool? isChatSupport ;
 
   ChatScreen({
     required this.senderId,
     required this.recipientId,
     this.senderAvatar,
     this.recipientAvatar,
+    this.isChatSupport,
+    required this.isSupport,
     required this.nameUser,
   });
 
@@ -311,7 +318,9 @@ class _ChatScreenState extends State<ChatScreen>   {
           senderId: int.parse(senderId),
           nameUser: nameUser,
           senderAvatar: null,
+
           recipientAvatar: null,
+          isSupport: false,
         )));
       }
     }
@@ -347,6 +356,7 @@ class _ChatScreenState extends State<ChatScreen>   {
       }
     }
   }
+
   Future<void> _fetchMessages() async {
     try {
       final response = await _getMessagesFromApi();
@@ -355,12 +365,13 @@ class _ChatScreenState extends State<ChatScreen>   {
         final List<Map<String, dynamic>> loadedMessages = [];
         for (final messageJson in messageData) {
           final message = MessageUser.fromJson(messageJson);
-          // Теперь добавляем файлы в loadedMessages
           loadedMessages.add({
             'message': message.textMessage,
-            'sender': message.senderId == widget.senderId ? 'self' : 'other',
+            'sender': message.senderId == widget.senderId ? 'other' : 'self',
             'time': message.sendingTime.toLocal().toString(),
-            'messageFiles': message.messageFiles.map((file) => file?.file_Url).toList(), // Добавление URL файлов
+            'messageFiles': message.messageFiles.map((file) {
+              return file != null ? baseFileUrl + file.file_Url : null; // Добавляем базовый URL
+            }).toList(),
           });
         }
         setState(() {
@@ -384,16 +395,13 @@ class _ChatScreenState extends State<ChatScreen>   {
     }
   }
 
-
-
-
   Future<void> _fetchUserPhotos() async {
     try {
       final Dio _dio = Dio();
 
       _dio.options.responseType = ResponseType.bytes;
       Response<List<int>> response = await _dio.get(
-          '$api/Users/user-photos/$IDUser');
+          '$api/Users/user-photos/${widget.recipientId}');
       if (response.statusCode == 200) {
         final photoData = response.data;
         setState(() {
@@ -426,11 +434,18 @@ class _ChatScreenState extends State<ChatScreen>   {
         backgroundColor: Colors.deepOrangeAccent,
         title: Row(
           children: [
-            CircleAvatar(
-              radius: 20,
-              backgroundImage: widget.recipientAvatar != null
-                  ? MemoryImage(widget.recipientAvatar!)
-                  : null,
+            Container(
+              width: 45,
+              height: 45,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.grey[700],
+              ),
+              child: ClipOval(
+                child: photoImages.isNotEmpty
+                    ? photoImages.last
+                    : const Icon(Icons.add_a_photo),
+              ),
             ),
             SizedBox(width: 10),
             Text(
@@ -450,10 +465,8 @@ class _ChatScreenState extends State<ChatScreen>   {
               itemCount: messages.length,
               itemBuilder: (context, index) {
                 final message = messages[index];
-                bool isSender = message['sender'] != 'self';
-/*
-                List<String> fileUrls = message['messageFiles']; // Используем список URL файлов здесь
-*/
+                bool isSender = message['sender'] == 'self';
+                List<String> fileUrls = message['messageFiles']?.whereType<String>().toList() ?? [];
 
                 return Column(
                   children: [
@@ -493,13 +506,15 @@ class _ChatScreenState extends State<ChatScreen>   {
                                       ],
                                     ),
                                   ),
-                                 /* ...fileUrls.map((url) {
-                                    String extension = url.split('.').last; // Получаем расширение файла из URL
+                                  ...fileUrls.isNotEmpty // Проверяем, не пустой ли массив URL файлов
+                                      ? fileUrls.map((url) { // Если не пуст, создаём виджеты для файлов
+                                    String extension = url.split('.').last;
                                     return Padding(
                                       padding: EdgeInsets.only(top: 8.0),
-                                      child: _buildFileWidget(url, extension, context), // Используем нашу функцию для выбора виджета
+                                      child: _buildFileWidget(url, extension, context),
                                     );
-                                  }).toList(),*/
+                                  }).toList()
+                                      : [],
                                 ],
                               ),
                             ),
@@ -560,8 +575,44 @@ class _ChatScreenState extends State<ChatScreen>   {
 
   Future<int> postMessageUser(String textMessage, DateTime sendingTime) async {
     try {
+      String idUser;
+      if(widget.isSupport){
+        idUser = '1';
+      }
+      else{
+        idUser = IDUser;
+      }
       final response = await dio.post(
         '$api/MessageUsers',
+        data: {
+          'textMessage': textMessage,
+          'sendingTime': sendingTime.toIso8601String(),
+          'userId': idUser,
+          'senderId': widget.recipientId,
+        },
+      );
+
+      if (response.statusCode == 201) {
+        print('MessageUser posted successfully');
+        final messageId = response.data['idMessage'];
+        return messageId;
+      } else {
+        print('Failed to post MessageUser with status code: ${response.statusCode}');
+        throw 'Failed to post MessageUser with status code: ${response.statusCode}';
+      }
+    } catch (error) {
+      print('Error posting MessageUser: $error');
+      throw 'Error posting MessageUser: $error';
+    }
+  }
+
+  Future<int> postSupportMessageUser(String textMessage, DateTime sendingTime) async {
+    try {
+      if(widget.isSupport && widget.isChatSupport == true){
+        IDUser = '1';
+      }
+      final response = await dio.post(
+        '$api/Support',
         data: {
           'textMessage': textMessage,
           'sendingTime': sendingTime.toIso8601String(),
@@ -587,26 +638,63 @@ class _ChatScreenState extends State<ChatScreen>   {
 
   Future<void> sendMessage() async {
     String textMessage = messageController.text.trim();
-
     if (textMessage.isEmpty && !_fileIsSelected) {
       print('Нет текста или файла для отправки');
       return;
     }
+    messageController.clear();
 
-    if (!textMessage.isEmpty) {
-      // Отправка текстового сообщения и получение idMessage
-      int messageId = await postMessageUser(textMessage, DateTime.now());
 
-      if (_fileIsSelected) {
-        // Отправка файла на сервер
-        await _uploadFile(_selectedFile, messageId);
+    DateTime sendingTime = DateTime.now();
+    // Форматируем время отправки сообщения для отображения
+    String formattedTime = DateFormat('HH:mm').format(sendingTime);
+
+
+    // Отправить сообщение на сервер и получить ID сообщения если требуется
+    int? messageId;
+    if(widget.isSupport != true) {
+      if (textMessage.isNotEmpty || _fileIsSelected) {
+        messageId = await postMessageUser(textMessage, sendingTime);
       }
 
-      setState(() {
-        messageController.clear();
-        _fileIsSelected = false;
-      });
     }
+    else {
+      if (textMessage.isNotEmpty || _fileIsSelected) {
+        messageId = await postSupportMessageUser(textMessage, sendingTime);
+      }
+    }
+
+
+
+    if (_fileIsSelected && messageId != null) {
+      // Если файл выбран, отправляем его на сервер
+      await _uploadFile(_selectedFile, messageId);
+
+    }
+
+    Map<String, dynamic> newMessageData = {
+      'message': textMessage,
+      'sender': 'self',
+      'time': formattedTime,
+      'messageFiles': _fileIsSelected ? [_selectedFile.path] : [] // добавьте сюда логику для файлов, если требуется
+    };
+    // Обновляем состояние путем добавления нового сообщения
+    setState(() {
+      messages.add(newMessageData); // добавление в конец списка вместо insert(0, newMessageData)
+      _fileIsSelected = false; // сбросить флаг выбранного файла
+
+    });
+
+    // Прокрутка к последнему сообщению
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+        );
+      }
+    });
   }
 
   Future<void> _uploadFile(File file, int messageId) async {
@@ -652,6 +740,7 @@ Future<void> onSelectNotification(String? payload) async {
           nameUser: nameUser,
           senderAvatar: null, // Здесь добавьте логику для аватаров, если нужно
           recipientAvatar: null,
+          isSupport: false,
         )));
       }
     }

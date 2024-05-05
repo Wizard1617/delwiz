@@ -121,7 +121,7 @@ class _RegistrationState extends State<Registration> {
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: TextField(
-                      controller: _firstNameController, // Контроллер для поля фамилии
+                      controller: _lastNameController, // Контроллер для поля фамилии
                       decoration: InputDecoration(
                         hintText: 'Введите фамилию',
                         labelText: 'Фамилия',
@@ -146,7 +146,7 @@ class _RegistrationState extends State<Registration> {
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: TextField(
-                      controller: _lastNameController, // Контроллер для поля имени
+                      controller: _firstNameController, // Контроллер для поля имени
                       decoration: InputDecoration(
                         hintText: 'Введите имя',
                         labelText: 'Имя',

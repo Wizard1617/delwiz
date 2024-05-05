@@ -6,34 +6,33 @@ class User {
   final String firstName;
   final String lastName;
   final String loginUser;
-  // Другие поля, конструктор и методы, если необходимо.
+  final String? nameRole; // Добавляем поле для роли пользователя.
 
   User({
     required this.id,
     required this.firstName,
     required this.lastName,
     required this.loginUser,
+     this.nameRole, // Обновляем конструктор.
   });
 
-  // Добавьте конструктор fromJson для разбора данных JSON.
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['idUser'] ?? IDUser, // Если 'idUser' равно null, используем значение по умолчанию (например, 0).
+      id: json['idUser'] ?? IDUser,
       firstName: json['firstName'] ?? '',
       lastName: json['lastName'] ?? '',
       loginUser: json['loginUser'] ?? '',
-      // И другие поля, если необходимо.
+      nameRole: json['nameRole'] ?? '', // Получаем роль из поля 'nameRole'.
     );
   }
 
-  // Добавьте метод toJson для сериализации данных в JSON.
   Map<String, dynamic> toJson() {
     return {
       'idUser': id,
       'firstName': firstName,
       'lastName': lastName,
       'loginUser': loginUser,
-      // И другие поля, если необходимо.
+      'nameRole': nameRole, // Включаем роль в сериализацию.
     };
   }
 }

@@ -3,7 +3,9 @@ import 'package:dio/dio.dart';
 final dio = Dio();
 final http = HttpClientAdapter();
 
-String api = 'http://delwiz.somee.com/';
+String api = 'http://192.168.1.69:5108/api';
+String baseFileUrl = "http://192.168.1.69:5108/"; // Замените на ваш базовый URL
+
 var IDUser = '';
 
 
@@ -18,10 +20,7 @@ Future<dynamic> getID(String login) async{
 /*String login="";
 String password="";*/
 
-Future<dynamic> request(String login, String password) async {
-/*  login = _loginController.text;
-  password = _passwordController.text;*/
-  Response response;
+Future<Map<String, dynamic>> request(String login, String password) async {
   try {
     Response response = await dio.post(
       '$api/Users/login',
@@ -29,15 +28,14 @@ Future<dynamic> request(String login, String password) async {
         'login': login,
         'password': password,
       },
-    );    print(response.data.toString());
-    // Handle the response here
+    );
+    print(response.data.toString());
+    return response.data; // Возвращаем данные ответа как Map<String, dynamic>.
   } catch (e) {
-    if (e is DioError) {
-      print("Dio Error: ${e.message}");
-      print("Dio Response: ${e.response?.data}");
-    }
+    throw e;
   }
 }
+
 
 void registration(String firstName, String lastName, String login, String password) async{
   /*String firstName = _firstNameController.text;
@@ -50,8 +48,7 @@ void registration(String firstName, String lastName, String login, String passwo
     'lastName': lastName,
     'loginUser': login,
     'passwordUser': password,
-    'roleId': 1,
-
+    'roleName': 'Блогер' // Отправляем название роли "Bloger"
   });
 }
 

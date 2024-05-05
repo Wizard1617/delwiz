@@ -1,3 +1,6 @@
+import 'package:delwiz/Support/SupportPage.dart';
+import 'package:delwiz/main.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -260,9 +263,11 @@ class _AuthorizationState extends State<Authorization> {
   }
 
   void _login() async {
-    await request(_loginController.text, _passwordController.text);
+    Map<String, dynamic> responseData = await request(_loginController.text, _passwordController.text);
     await getID(_loginController.text);
     await fillUserDataByUserId();
+    // Парсим ответ и получаем роль пользователя.
+    nameRole = responseData['nameRole'];
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('isLoggedIn', true);
@@ -270,18 +275,37 @@ class _AuthorizationState extends State<Authorization> {
     prefs.setString('firstName', user.firstName);
     prefs.setString('lastName', user.lastName);
     prefs.setString('loginUser', user.loginUser);
+    prefs.setString('nameRole', nameRole); // Сохраняем роль пользователя.
     _showLoginMessage('Вход выполнен');
     print("Login function executed");
 
     user = await getUserInfoFromSharedPreferences();
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => NavigationScreen(user: user),
-        fullscreenDialog: false, // Этот параметр скроет кнопку "назад"
-      ),
-    );
+    // Определение страницы на основе роли пользователя.
+    if (nameRole == "Блогер" || nameRole == "Модератор") {
+      _showLoginMessage('Вход выполнен');
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => NavigationScreen(user: user),
+          fullscreenDialog: false,
+        ),
+      );
+    } else if (nameRole == "Специалист службы поддержки") {
+      _showLoginMessage('Вход выполнен');
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SupportPage(),
+          fullscreenDialog: false,
+        ),
+      );
+    } else {
+      // Обработка других ролей или случаев.
+    }
+
   }
 }
 
@@ -291,7 +315,7 @@ Future<User> getUserInfoFromSharedPreferences() async {
   // Здесь предполагается, что информация о пользователе была сохранена в SharedPreferences
   final int userId =
       prefs.getInt('userId') ?? 0; // Замените на ключ, который вы использовали
-  IDUser = prefs.getInt('userId').toString() ??
+    IDUser = prefs.getInt('userId').toString() ??
       0.toString(); // Замените на ключ, который вы использовали
   final String firstName = prefs.getString('firstName') ?? '';
   final String lastName = prefs.getString('lastName') ?? '';

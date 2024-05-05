@@ -1,5 +1,8 @@
+import 'package:delwiz/Moderator/AchievementsPage.dart';
+import 'package:delwiz/Pages/Messages/ChatScreen.dart';
 import 'package:delwiz/Pages/Profile/AboutPage.dart';
 import 'package:delwiz/Pages/Profile/InfoPage.dart';
+import 'package:delwiz/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -66,7 +69,21 @@ class _SettingsState extends State<Settings> {
               // Действие при нажатии: переход на страницу аккаунта
             },
           ),
+          if(nameRole != 'Специалист службы поддержки' && nameRole != 'Блогер')...[
           ListTile(
+            leading: Icon(Icons.emoji_events, color: Colors.deepOrangeAccent),
+            title: Text('Достижения'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AchievementsPage()),
+              );
+              // Действие при нажатии: переход на страницу достижений
+            },
+          ),
+          ],
+          if(nameRole != 'Специалист службы поддержки')...[
+            ListTile(
             leading: Icon(Icons.lock, color: Colors.deepOrangeAccent),
             title: Text('Приватность'),
             onTap: () {
@@ -74,6 +91,7 @@ class _SettingsState extends State<Settings> {
               // Действие при нажатии: переход на страницу настроек приватности
             },
           ),
+          ],
           ListTile(
             leading: Icon(Icons.info, color: Colors.deepOrangeAccent),
             title: Text('О приложении'),
@@ -83,6 +101,25 @@ class _SettingsState extends State<Settings> {
                 MaterialPageRoute(builder: (context) => AboutPage()),
               );
               // Действие при нажатии: переход на страницу о приложении
+            },
+          ),
+          if(nameRole != 'Специалист службы поддержки')
+          ListTile(
+            leading: Icon(Icons.support_agent, color: Colors.deepOrangeAccent),
+            title: Text('Поддержка'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  fullscreenDialog: true,
+                  builder: (context) => ChatScreen(
+                    senderId: int.parse(IDUser),
+                    recipientId: 1,
+                    nameUser: 'Поддержка',
+                    isSupport: true,
+                  ),
+                ),
+              );
             },
           ),
           Divider(),

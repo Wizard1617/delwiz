@@ -320,7 +320,7 @@ class _UserDetailsWidgetState extends State<UserDetailsWidget>
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        user.lastName,
+                        user.firstName + ' '+user.lastName,
                         style: const TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),

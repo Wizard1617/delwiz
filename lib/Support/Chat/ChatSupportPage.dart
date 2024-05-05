@@ -1,21 +1,24 @@
 import 'dart:typed_data';
 
+import 'package:delwiz/Models/Support.dart';
+import 'package:delwiz/Pages/Messages/ChatScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Api/ApiRequest.dart';
-import '../../Models/Correspondence.dart';
 import '../../Models/MessageUser.dart';
-import 'ChatScreen.dart';
 
-class MessengerScreen extends StatefulWidget {
+class ChatSupportPage extends StatefulWidget {
+  const ChatSupportPage({super.key});
+
   @override
-  _MessengerScreenState createState() => _MessengerScreenState();
+  State<ChatSupportPage> createState() => _ChatSupportPageState();
 }
 
-class _MessengerScreenState extends State<MessengerScreen> {
+class _ChatSupportPageState extends State<ChatSupportPage> {
   Set<int> uniqueSenderIds = {};
-  List<Correspondence> correspondences = [];
+  List<Support> correspondences = [];
 
   @override
   void initState() {
@@ -25,14 +28,14 @@ class _MessengerScreenState extends State<MessengerScreen> {
 
   Future<String> _fetchUserName(int userId) async {
     try {
-      final response = await Dio().get(
-          '$api/Users/GetUserNameByUserId?userId=$userId');
+      final response =
+          await Dio().get('$api/Users/GetUserNameByUserId?userId=$userId');
 
       if (response.statusCode == 200) {
         return response.data;
       } else {
-        print('Failed to fetch username with status code: ${response
-            .statusCode}');
+        print(
+            'Failed to fetch username with status code: ${response.statusCode}');
       }
     } catch (error) {
       print('Error fetching username: $error');
@@ -49,46 +52,41 @@ class _MessengerScreenState extends State<MessengerScreen> {
       if (response.statusCode == 200) {
         return response.data!;
       } else {
-        print('Failed to fetch user photo with status code: ${response
-            .statusCode}');
-        return [
-        ]; // or throw an exception if you want to handle errors differently
+        print(
+            'Failed to fetch user photo with status code: ${response.statusCode}');
+        return []; // or throw an exception if you want to handle errors differently
       }
     } catch (error) {
       print('Error: $error');
-      return [
-      ]; // or throw an exception if you want to handle errors differently
+      return []; // or throw an exception if you want to handle errors differently
     }
   }
 
-
   Future<void> _fetchCorrespondences() async {
     try {
-      final response = await Dio().get('$api/Correspondences');
+      final response = await Dio().get('$api/Support');
 
       if (response.statusCode == 200) {
         final List<dynamic> correspondenceData = response.data;
         // Создаём временный список для новых корреспонденций
-        final List<Correspondence> newCorrespondences = [];
+        final List<Support> newCorrespondences = [];
         // Очищаем список уникальных ID отправителей, чтобы избежать дублирования
         uniqueSenderIds.clear();
 
         for (final correspondenceJson in correspondenceData) {
-          final correspondence = Correspondence.fromJson(correspondenceJson);
+          final correspondence = Support.fromJson(correspondenceJson);
 
           // Проверяем, что корреспонденция связана с текущим пользователем
-          if (correspondence.userId == int.parse(IDUser)) {
-            if (!uniqueSenderIds.contains(correspondence.senderId)) {
-              final lastMessage = await _fetchLastMessage(correspondence.senderId);
+              final lastMessage =
+                  await _fetchLastMessage(correspondence.userId);
 
               if (lastMessage != null) {
                 correspondence.lastMessage = lastMessage;
                 newCorrespondences.add(correspondence);
                 // Добавляем ID отправителя в список уникальных ID
-                uniqueSenderIds.add(correspondence.senderId);
               }
-            }
-          }
+
+
         }
 
         // Обновляем состояние списка корреспонденций новыми данными
@@ -96,24 +94,25 @@ class _MessengerScreenState extends State<MessengerScreen> {
           correspondences = newCorrespondences;
         });
       } else {
-        print('Failed to fetch correspondences with status code: ${response.statusCode}');
+        print(
+            'Failed to fetch correspondences with status code: ${response.statusCode}');
       }
     } catch (error) {
       print('Error fetching correspondences: $error');
     }
   }
 
-
   Future<MessageUser?> _fetchLastMessage(int userId) async {
     try {
-      final response = await Dio().get(
-          '$api/MessageUsers/GetLastMessage/$userId');
+      final response =
+          await Dio().get('$api/MessageUsers/GetLastMessage/$userId');
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> lastMessageJson = response.data;
         return MessageUser.fromJson(lastMessageJson);
       } else {
-        print('Failed to fetch last message with status code: ${response.statusCode}');
+        print(
+            'Failed to fetch last message with status code: ${response.statusCode}');
       }
     } catch (error) {
       print('Error fetching last message: $error');
@@ -138,8 +137,8 @@ class _MessengerScreenState extends State<MessengerScreen> {
         final messageText = messageTextResponse.data;
         return '$userName: $messageText';
       } else {
-        print('Failed to fetch username with status code: ${userNameResponse
-            .statusCode}');
+        print(
+            'Failed to fetch username with status code: ${userNameResponse.statusCode}');
       }
     } catch (error) {
       print('Error fetching username or message text: $error');
@@ -156,7 +155,10 @@ class _MessengerScreenState extends State<MessengerScreen> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: Colors.deepOrangeAccent,
-          title: Text('Мессенджер',style: TextStyle(color: Colors.white),),
+          title: Text(
+            'Мессенджер',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
         body: RefreshIndicator(
           onRefresh: _onRefresh, // Ваш метод обновления данных
@@ -164,69 +166,73 @@ class _MessengerScreenState extends State<MessengerScreen> {
             itemCount: correspondences.length,
             itemBuilder: (context, index) {
               final correspondence = correspondences[index];
-              final lastMessageText = correspondence.lastMessage?.textMessage ?? 'No messages';
+              final lastMessageText =
+                  correspondence.lastMessage?.textMessage ?? 'No messages';
 
               return FutureBuilder(
                 future: Future.wait([
-                  _fetchUserNameAndMessageText(correspondence.senderId, correspondence.messageId),
-                  _fetchUserPhoto(correspondence.senderId),
-                  _fetchUserName(correspondence.senderId),
+                  _fetchUserNameAndMessageText(
+                      correspondence.userId, correspondence.messageId),
+                  _fetchUserPhoto(correspondence.userId),
+                  _fetchUserName(correspondence.userId),
                 ]),
                 builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return ListTile(
-                  leading: CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Colors.grey,
-                  ),
-                  title: Text('Loading...'),
-                  subtitle: Text('Last message: ${correspondence.messageId}'),
-                );
-              } else if (snapshot.hasError) {
-                return ListTile(
-                  leading: CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Colors.grey,
-                  ),
-                  title: Text('Error: ${snapshot.error}'),
-                  subtitle: Text('Last message: ${correspondence.messageId}'),
-                );
-              } else {
-                final userNameAndMessageText = snapshot.data![0];
-                userPhoto = snapshot.data![1] as List<int>;
-                final userName = snapshot.data![2];
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return ListTile(
+                      leading: CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.grey,
+                      ),
+                      title: Text('Loading...'),
+                      subtitle:
+                          Text('Last message: ${correspondence.messageId}'),
+                    );
+                  } else if (snapshot.hasError) {
+                    return ListTile(
+                      leading: CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.grey,
+                      ),
+                      title: Text('Error: ${snapshot.error}'),
+                      subtitle:
+                          Text('Last message: ${correspondence.messageId}'),
+                    );
+                  } else {
+                    final userNameAndMessageText = snapshot.data![0];
+                    userPhoto = snapshot.data![1] as List<int>;
+                    final userName = snapshot.data![2];
 
-                return ListTile(
-                  leading: CircleAvatar(
-                    radius: 20,
-                    backgroundImage: userPhoto.isNotEmpty ? MemoryImage(
-                        Uint8List.fromList(userPhoto)) : null,
-                  ),
-                  title: Text(userName.toString()),
-                  subtitle: Text(lastMessageText),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            ChatScreen(
-                              senderId: correspondence.userId,
-                              recipientId: correspondence.senderId,
+                    return ListTile(
+                      leading: CircleAvatar(
+                        radius: 20,
+                        backgroundImage: userPhoto.isNotEmpty
+                            ? MemoryImage(Uint8List.fromList(userPhoto))
+                            : null,
+                      ),
+                      title: Text(userName.toString()),
+                      subtitle: Text(lastMessageText),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChatScreen(
+                              senderId: correspondence.specialistId,
+                              recipientId: correspondence.userId,
                               nameUser: '$userName',
 
-                              isSupport: false,
+                              isSupport: true,
+                              isChatSupport: true,
                             ),
-                      ),
+                          ),
+                        );
+                      },
                     );
-                  },
-                );
-              }
+                  }
+                },
+              );
             },
-          );
-        },
-      ),
-    )
-    );
+          ),
+        ));
   }
 
   Future<void> _onRefresh() async {

@@ -270,7 +270,7 @@ class _UserProfileState extends State<UserProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Профиль' ,style: TextStyle(color: Colors.white),),
+        title: const Text('Профиль' ,style: TextStyle(color: Colors.white),),
         backgroundColor: Colors.deepOrangeAccent,
       ),
       body: DefaultTabController(
@@ -279,7 +279,7 @@ class _UserProfileState extends State<UserProfile> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ClipOval(
               child: SizedBox(
                 width: 100,  // Diameter width
@@ -289,7 +289,7 @@ class _UserProfileState extends State<UserProfile> {
                     : const Icon(Icons.add_a_photo, size: 60), // Setting the Icon size for visual consistency
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             // Используем Stack для размещения текста и иконок
             Stack(
               children: [
@@ -298,8 +298,8 @@ class _UserProfileState extends State<UserProfile> {
                   alignment: Alignment.center,
                   child: Column(
                     children: [
-                      Text('${widget.firstName} ${widget.lastName}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                      Text('@${widget.login}', style: TextStyle(fontSize: 16, color: Colors.grey)),
+                      Text('${widget.firstName} ${widget.lastName}', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      Text('@${widget.login}', style: const TextStyle(fontSize: 16, color: Colors.grey)),
                     ],
                   ),
                 ),
@@ -307,14 +307,14 @@ class _UserProfileState extends State<UserProfile> {
                 Align(
                   alignment: Alignment.centerRight  ,
                   child: Padding(
-                    padding: EdgeInsets.only(right: 30.0, top: 10), // Уменьшаем отступ с правого края
+                    padding: const EdgeInsets.only(right: 30.0, top: 10), // Уменьшаем отступ с правого края
                     child: FutureBuilder<bool>(
                       future: isUserInFriends(int.parse(IDUser), widget.recipientId),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
                           if (snapshot.data ?? false) {
                             return IconButton(
-                              icon: Icon(Icons.check, color: Colors.green),
+                              icon: const Icon(Icons.check, color: Colors.green),
                               onPressed: () async {
                                 final RenderBox button = context.findRenderObject() as RenderBox;
                                 final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
@@ -330,7 +330,7 @@ class _UserProfileState extends State<UserProfile> {
                                   context: context,
                                   position: position, // Use calculated coordinates
                                   items: [
-                                    PopupMenuItem<String>(
+                                    const PopupMenuItem<String>(
                                       value: 'delete',
                                       child: ListTile(
                                         leading: Icon(Icons.delete, color: Colors.red),
@@ -353,7 +353,7 @@ class _UserProfileState extends State<UserProfile> {
 
                           } else if (isRequestSent) {
                             return IconButton(
-                              icon: Icon(Icons.hourglass_top, color: Colors.amber),
+                              icon: const Icon(Icons.hourglass_top, color: Colors.amber),
                               onPressed: () async {
                                 applicationId = await getApplicationIdByUserIds(int.parse(IDUser), widget.recipientId);
                                 if (applicationId != null) {
@@ -377,12 +377,12 @@ class _UserProfileState extends State<UserProfile> {
                                       PopupMenuItem<String>(
                                         value: 'cancel',
                                         child: Container(
-                                          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20), // Внутренние отступы
+                                          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20), // Внутренние отступы
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(5), // Скругление углов внутри элемента меню
                                             color: Colors.transparent, // Прозрачный цвет для контейнера внутри PopupMenuItem
                                           ),
-                                          child: Row(
+                                          child: const Row(
                                             mainAxisSize: MainAxisSize.min,
                                             children: <Widget>[
                                               Icon(Icons.cancel, color: Colors.white), // Иконка отмены
@@ -408,7 +408,7 @@ class _UserProfileState extends State<UserProfile> {
 
                           } else if (isRequestReceived) {
                             return IconButton(
-                              icon: Icon(Icons.person_add, color: Colors.deepOrangeAccent),
+                              icon: const Icon(Icons.person_add, color: Colors.deepOrangeAccent),
                               onPressed: () async {
                                 final RenderBox button = context.findRenderObject() as RenderBox;
                                 final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
@@ -424,14 +424,14 @@ class _UserProfileState extends State<UserProfile> {
                                   context: context,
                                   position: position, // Используйте рассчитанные координаты
                                   items: [
-                                    PopupMenuItem<String>(
+                                    const PopupMenuItem<String>(
                                       value: 'accept',
                                       child: ListTile(
                                         leading: Icon(Icons.check, color: Colors.green),
                                         title: Text('Принять', style: TextStyle(color: Colors.white)),
                                       ),
                                     ),
-                                    PopupMenuItem<String>(
+                                    const PopupMenuItem<String>(
                                       value: 'reject',
                                       child: ListTile(
                                         leading: Icon(Icons.cancel, color: Colors.red),
@@ -457,7 +457,7 @@ class _UserProfileState extends State<UserProfile> {
 
                           else {
                             return IconButton(
-                              icon: Icon(Icons.person_add, color: Colors.deepOrangeAccent),
+                              icon: const Icon(Icons.person_add, color: Colors.deepOrangeAccent),
                               onPressed: () async {
                                 await sendFriendRequest(widget.recipientId, widget.senderId);
                                 setState(() {
@@ -467,14 +467,14 @@ class _UserProfileState extends State<UserProfile> {
                             );
                           }
                         }
-                        return SizedBox.shrink();
+                        return const SizedBox.shrink();
                       },
                     ),
                   ),
                 )
               ],
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -485,8 +485,10 @@ class _UserProfileState extends State<UserProfile> {
                       senderId: widget.senderId,
                       recipientId: widget.recipientId,
                       senderAvatar: widget.userPhoto,
+
                       recipientAvatar: widget.userPhoto,
                       nameUser: widget.lastName,
+                      isSupport: false,
                     ),
                   ),
                 );
@@ -497,7 +499,7 @@ class _UserProfileState extends State<UserProfile> {
                   RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
                 ),
               ),
-              child: Text('Отправить сообщение'),
+              child: const Text('Отправить сообщение'),
             ),
             TabBar(
               tabs: [
