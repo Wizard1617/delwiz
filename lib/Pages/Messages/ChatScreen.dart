@@ -33,7 +33,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 /*const String _baseFileUrl = "http://192.168.1.69:5108/";*/ // Замените на ваш базовый URL
 /*
 */
-String newMessage = 'r';
+String newMessage = '';
 class ChatScreen extends StatefulWidget {
   final int senderId;
   final int recipientId;
@@ -226,10 +226,10 @@ class _ChatScreenState extends State<ChatScreen>   {
         print("From: ${message.from}");
         print("Notification Data: ${message.data}");
 
-        showNotification(
+     /*   showNotification(
             'Новое сообщениеуу' ?? 'Default itle',
             message.notification?.body ?? 'Default ody   $newMessage', newMessage
-        );
+        );*/
 
       });
 
@@ -327,6 +327,7 @@ class _ChatScreenState extends State<ChatScreen>   {
   }
 
 
+/*
   Future<void> showNotification(String title, String body, String messageText) async {
     // Проверка, следует ли показывать уведомление в мобильном приложении
     bool shouldShowMobileNotification = false;
@@ -356,6 +357,7 @@ class _ChatScreenState extends State<ChatScreen>   {
       }
     }
   }
+*/
 
   Future<void> _fetchMessages() async {
     try {
