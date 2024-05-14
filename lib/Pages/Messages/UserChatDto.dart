@@ -22,7 +22,12 @@ class UserChatDto {
       senderId: json['senderId'],
       userName: json['userName'],
       lastMessage: json['lastMessage'],
-      userPhoto: json['userPhoto'] != null ? List<int>.from(json['userPhoto']) : null,
+      userPhoto: json['userPhoto'] != null
+          ? (json['userPhoto'] is List<int>
+          ? List<int>.from(json['userPhoto'])
+          : null)
+          : null,
     );
   }
+
 }

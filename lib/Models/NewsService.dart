@@ -1,6 +1,7 @@
 
 import 'package:delwiz/Models/NewsDto.dart';
 import 'package:dio/dio.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../Api/ApiRequest.dart';
 
@@ -42,11 +43,22 @@ class NewsService {
   Future<void> editNews({
     required int newsId,
     required String newDescription,
+    required List<XFile> mediaFiles,
   }) async {
+    // Создаем объект FormData
+    FormData formData = FormData.fromMap({
+      'description': newDescription,
+      // Добавляем медиафайлы если они есть
+      'files': [
+        for (var file in mediaFiles)
+          await MultipartFile.fromFile(file.path, filename: file.name),
+      ],
+    });
+
     try {
       await _dio.put(
         '$api/News/$newsId',
-        queryParameters: {'newDescription': newDescription},
+        data: formData,
       );
     } catch (e) {
       print('Error editing news: $e');

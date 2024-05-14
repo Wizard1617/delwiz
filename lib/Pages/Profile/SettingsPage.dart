@@ -2,6 +2,7 @@ import 'package:delwiz/Moderator/AchievementsPage.dart';
 import 'package:delwiz/Pages/Messages/ChatScreen.dart';
 import 'package:delwiz/Pages/Profile/AboutPage.dart';
 import 'package:delwiz/Pages/Profile/InfoPage.dart';
+import 'package:delwiz/Pages/Profile/PrivacySettingsPage.dart';
 import 'package:delwiz/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -84,13 +85,16 @@ class _SettingsState extends State<Settings> {
           ],
           if(nameRole != 'Специалист службы поддержки')...[
             ListTile(
-            leading: Icon(Icons.lock, color: Colors.deepOrangeAccent),
-            title: Text('Приватность'),
-            onTap: () {
-
-              // Действие при нажатии: переход на страницу настроек приватности
-            },
-          ),
+              leading: Icon(Icons.lock, color: Colors.deepOrangeAccent),
+              title: Text('Приватность'),
+              onTap: () {
+                // Навигация на страницу настроек приватности
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PrivacySettingsPage()),
+                );
+              },
+            ),
           ],
           ListTile(
             leading: Icon(Icons.info, color: Colors.deepOrangeAccent),

@@ -7,6 +7,7 @@ class User {
   final String lastName;
   final String loginUser;
   final String? nameRole; // Добавляем поле для роли пользователя.
+  final bool? privatnost; // Добавляем поле для роли пользователя.
 
   User({
     required this.id,
@@ -14,6 +15,7 @@ class User {
     required this.lastName,
     required this.loginUser,
      this.nameRole, // Обновляем конструктор.
+     this.privatnost, // Обновляем конструктор.
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -23,6 +25,7 @@ class User {
       lastName: json['lastName'] ?? '',
       loginUser: json['loginUser'] ?? '',
       nameRole: json['nameRole'] ?? '', // Получаем роль из поля 'nameRole'.
+      privatnost: json['privatnost'] ?? false, // Получаем роль из поля 'nameRole'.
     );
   }
 
@@ -33,6 +36,7 @@ class User {
       'lastName': lastName,
       'loginUser': loginUser,
       'nameRole': nameRole, // Включаем роль в сериализацию.
+      'privatnost': privatnost, // Включаем роль в сериализацию.
     };
   }
 }

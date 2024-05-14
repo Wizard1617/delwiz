@@ -77,24 +77,33 @@ class _AddNewsState extends State<AddNews> {
   Future<void> _selectMedia(String mediaType) async {
     FileType fileType = FileType.media;
     if (mediaType == 'image') {
-      fileType = FileType.image;  // Изменение типа файла на изображения
+      fileType = FileType.image; // Изменение типа файла на изображения
     } else if (mediaType == 'video') {
-      fileType = FileType.video;  // Изменение типа файла на видео
+      fileType = FileType.video; // Изменение типа файла на видео
     }
 
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       allowMultiple: true,
-      type: fileType,  // использование выбранного типа файла
+      type: fileType, // использование выбранного типа файла
     );
 
     if (result != null) {
-      List<XFile> files = result.files.map((file) {
-        return XFile(file.path!); // Создаем XFile из PlatformFile
-      }).toList();
-
-      setState(() {
-        _selectedMedia.addAll(files);
-      });
+      for (var file in result.files) {
+        if (mediaType == 'image') {
+          // Обрабатываем каждое изображение: обрезка перед добавлением
+          final croppedFile = await _cropImage(file.path!);
+          if (croppedFile != null) {
+            setState(() {
+              _selectedMedia.add(XFile(croppedFile.path));
+            });
+          }
+        } else if (mediaType == 'video') {
+          // Для видео файлов просто добавляем их без обработки
+          setState(() {
+            _selectedMedia.add(XFile(file.path!));
+          });
+        }
+      }
     }
   }
   Future<List<int>> _uploadMedia() async {

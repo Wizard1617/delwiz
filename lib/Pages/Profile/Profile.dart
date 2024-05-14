@@ -49,8 +49,9 @@ class _UserDetailsWidgetState extends State<UserDetailsWidget>
   @override
   void initState() {
     super.initState();
-    _getUserInfoFromPrefs();
     if (!isDataLoaded) {
+      _getUserInfoFromPrefs();
+
       UserInfo();
     }
   }
@@ -75,11 +76,14 @@ class _UserDetailsWidgetState extends State<UserDetailsWidget>
       id: userId,
       firstName: firstName,
       lastName: lastName,
+      privatnost: user.privatnost,
+
       loginUser: loginUser,
       // Добавьте остальные поля пользователя
     );
 
-    setState(() {});
+    setState(() {          isDataLoaded = true; // Обновляем флаг загрузки данных
+    });
   }
 
 /*

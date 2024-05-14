@@ -67,6 +67,8 @@ class _NavigationScreenState extends State<NavigationScreen>
 
     user = User(
       id: userId,
+      privatnost: user.privatnost,
+
       firstName: firstName,
       lastName: lastName,
       loginUser: loginUser,

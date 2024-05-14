@@ -38,12 +38,7 @@ Future<Map<String, dynamic>> request(String login, String password) async {
 
 
 void registration(String firstName, String lastName, String login, String password) async{
-  /*String firstName = _firstNameController.text;
-  String lastName = _lastNameController.text;
-  String login = _loginController.text;
-  String password = _passwordController.text;*/
-  Response response;
-  response = await dio.post('$api/Users/register', data: {
+   await dio.post('$api/Users/register', data: {
     'firstName': firstName,
     'lastName': lastName,
     'loginUser': login,

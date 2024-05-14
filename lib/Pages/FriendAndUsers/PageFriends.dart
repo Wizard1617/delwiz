@@ -135,6 +135,7 @@ class _PageFriendsState extends State<PageFriends> {
                             builder: (context) => UserProfile(
                               firstName: user.firstName,
                               lastName: user.lastName,
+                              privatnost: user.privatnost!,
                               login: user.loginUser,
                               userPhoto: userPhotos.isNotEmpty ? Uint8List.fromList(userPhotos) : null,
                               recipientId: user.id,

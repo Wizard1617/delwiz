@@ -133,6 +133,7 @@ class _ApplicationsState extends State<Applications> {
                           MaterialPageRoute(
                             builder: (context) => UserProfile(
                               firstName: user.firstName,
+                              privatnost: user.privatnost!,
                               lastName: user.lastName,
                               login: user.loginUser,
                               userPhoto: userPhotos.isNotEmpty ? Uint8List.fromList(userPhotos) : null,

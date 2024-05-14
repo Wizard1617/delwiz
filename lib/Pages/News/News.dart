@@ -95,10 +95,10 @@ class _NewsScreenState extends State<NewsScreen> with AutomaticKeepAliveClientMi
     super.build(context);
     return Scaffold(
       key: globalScaffoldKey,
-
       body: RefreshIndicator(
         onRefresh: _onRefresh,
         child: CustomScrollView(
+          physics: AlwaysScrollableScrollPhysics(), // Всегда обеспечиваем возможность прокрутки
           controller: _scrollController,
           slivers: <Widget>[
             SliverAppBar(
@@ -127,7 +127,6 @@ class _NewsScreenState extends State<NewsScreen> with AutomaticKeepAliveClientMi
       ),
     );
   }
-
   Future<void> _onRefresh() async {
     setState(() {
       currentPage = 1; // Сброс текущей страницы

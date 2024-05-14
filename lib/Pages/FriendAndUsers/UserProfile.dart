@@ -15,6 +15,7 @@ import '../AuthRegUser/Auth.dart';
 
 class UserProfile extends StatefulWidget {
   final String firstName;
+  final bool privatnost;
   final String lastName;
   final String login;
   final int recipientId;
@@ -26,6 +27,7 @@ class UserProfile extends StatefulWidget {
     required this.lastName,
     required this.login,
     this.userPhoto,
+    required this.privatnost,
     required this.recipientId,
     required this.senderId,
   });
@@ -113,6 +115,8 @@ class _UserProfileState extends State<UserProfile> {
   MaNameUser = lastName;
     user = User(
       id: userId,
+      privatnost: false,
+
       firstName: firstName,
       lastName: lastName,
       loginUser: loginUser,
@@ -501,6 +505,7 @@ class _UserProfileState extends State<UserProfile> {
               ),
               child: const Text('Отправить сообщение'),
             ),
+            if(widget.privatnost == false)...[
             TabBar(
               tabs: [
                 const Tab(text: "Фотографии"),
@@ -562,7 +567,7 @@ class _UserProfileState extends State<UserProfile> {
                 ],
               ),
             ),
-          ],
+          ]],
         ),
       )
     );
