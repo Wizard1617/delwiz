@@ -70,7 +70,7 @@ class _SettingsState extends State<Settings> {
               // Действие при нажатии: переход на страницу аккаунта
             },
           ),
-          if(nameRole != 'Специалист службы поддержки' && nameRole != 'Блогер')...[
+          if(nameRole != 'Support' && nameRole != 'Blogger')...[
           ListTile(
             leading: Icon(Icons.emoji_events, color: Colors.deepOrangeAccent),
             title: Text('Достижения'),
@@ -83,7 +83,7 @@ class _SettingsState extends State<Settings> {
             },
           ),
           ],
-          if(nameRole != 'Специалист службы поддержки')...[
+          if(nameRole != 'Support')...[
             ListTile(
               leading: Icon(Icons.lock, color: Colors.deepOrangeAccent),
               title: Text('Приватность'),
@@ -107,7 +107,7 @@ class _SettingsState extends State<Settings> {
               // Действие при нажатии: переход на страницу о приложении
             },
           ),
-          if(nameRole != 'Специалист службы поддержки')
+          if(nameRole != 'Support')
           ListTile(
             leading: Icon(Icons.support_agent, color: Colors.deepOrangeAccent),
             title: Text('Поддержка'),

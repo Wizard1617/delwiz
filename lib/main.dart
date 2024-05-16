@@ -93,9 +93,9 @@ void main() async {
 
 Widget _getHomeScreen(String nameRole) {
   // Определяем какую страницу показывать на основе роли пользователя.
-  if (nameRole == "Блогер" || nameRole == "Модератор") {
+  if (nameRole == "Blogger" || nameRole == "Moderator") {
     return AuthenticatedApp(); // Ваша страница для Блогера или Модератора.
-  } else if (nameRole == "Специалист службы поддержки") {
+  } else if (nameRole == "Support") {
     return SupportPage(); // Ваша страница для Специалиста службы поддержки.
   } else {
     // Обработка других ролей или случаев.

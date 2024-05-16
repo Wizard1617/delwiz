@@ -66,54 +66,26 @@ class _RegistrationState extends State<Registration> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(
+      appBar: AppBar(
+        title: Text('Регистрация'),
+        centerTitle: true,
+
+      ),
+        body: SingleChildScrollView(child:
+        Stack(
           children: [
             Center(
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey[700]?.withOpacity(0.2), // Задаем зеленый цвет
-                  borderRadius: BorderRadius.circular(30.0), // Закругляем края
+                  color: Colors.grey[700]?.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(30.0),
                 ),
                 height: 500, // Задаем высоту прямоугольника
                 width: 420, // Задаем ширину прямоугольника
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(top: 20, left: 25),
-              child: OutlinedButton(
-                onPressed: () => _navigateToAuthorization(context),
-                style: ButtonStyle(
-                  side: MaterialStateProperty.all(
-                    const BorderSide(
-                      color: Colors.deepOrangeAccent,
-                      width: 1.0,
-                    ),
-                  ),
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white), // Здесь указываем цвет текста
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.deepOrangeAccent),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25.0), // Здесь устанавливаем радиус закругления
-                    ),
-                  ),// Здесь указываем цвет текста
 
-                ),
-                child: Icon(Icons.arrow_back),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(top: 20, right: 25),
-              child: Align(
-                alignment: Alignment.topRight,
-                child: Text(
-                  '⌞Ai⌝',
-                  style: TextStyle(
-                    fontSize: 25.0,
-                    color: Colors.deepOrangeAccent,
-                  ),
-                ),
-              ),
-            ),
+
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -281,7 +253,7 @@ class _RegistrationState extends State<Registration> {
                       ),
                     ),
                     child: const Text('Зарегистрироваться',
-                      style: TextStyle(
+                      style: TextStyle( color: Colors.white
                       ),),
                   ),
                 ],
@@ -290,6 +262,8 @@ class _RegistrationState extends State<Registration> {
 
           ],
         ),
+
+        )
 
     );
   }

@@ -21,6 +21,7 @@ class Authorization extends StatefulWidget {
   @override
   State<Authorization> createState() => _AuthorizationState();
 }
+GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
 class _AuthorizationState extends State<Authorization> {
   bool _isObscure = true;
@@ -85,6 +86,11 @@ class _AuthorizationState extends State<Authorization> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+            title:  Text('Авторизация') ,
+          centerTitle: true,
+
+        ),
         body: Stack(
           children: [
             Center(
@@ -97,19 +103,7 @@ class _AuthorizationState extends State<Authorization> {
                 width: 420, // Задаем ширину прямоугольника
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(right: 25),
-              child: Align(
-                alignment: Alignment.topRight,
-                child: Text(
-                  "⌞Ai⌝",
-                  style: TextStyle(
-                    fontSize: 35.0,
-                    color: Colors.deepOrangeAccent,
-                  ),
-                ),
-              ),
-            ),
+
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -163,37 +157,64 @@ class _AuthorizationState extends State<Authorization> {
                         width: textFieldWidth,
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
-                          child: TextField(
-                            controller: _passwordController,
-                            obscureText: _isObscure,
-                            decoration: InputDecoration(
-                              hintText: 'Введите пароль',
-                              labelText: 'Пароль',
-                              prefixIcon: const Icon(Icons.lock),
-                              suffixIcon: GestureDetector(
-                                onTap: _toggleObscure,
-                                child: Icon(
-                                  _isObscure
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
+                          child: Form(
+                            // Оборачиваем в Form
+                            key: _formKey, // Устанавливаем ключ
+                            child: TextFormField(
+                              // Используем TextFormField
+                              controller: _passwordController,
+                              obscureText: _isObscure,
+                              decoration: InputDecoration(
+                                hintText: 'Введите пароль',
+                                labelText: 'Пароль',
+                                prefixIcon: const Icon(Icons.lock),
+                                suffixIcon: GestureDetector(
+                                  onTap: _toggleObscure,
+                                  child: Icon(
+                                    _isObscure
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  ),
                                 ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide: const BorderSide(
+                                      color: Colors.deepOrangeAccent,
+                                      width: 1.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide: const BorderSide(
+                                      color: Colors.blue, width: 2.0),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  // Граница при ошибке
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide: const BorderSide(
+                                      color: Colors.red, width: 2.0),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  // Граница фокуса при ошибке
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide: const BorderSide(
+                                      color: Colors.red, width: 2.0),
+                                ),
+                                hintStyle: const TextStyle(color: Colors.blue),
+                                contentPadding: const EdgeInsets.all(12.0),
                               ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                borderSide: const BorderSide(
-                                    color: Colors.deepOrangeAccent, width: 1.0),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                borderSide: const BorderSide(
-                                    color: Colors.blue, width: 2.0),
-                              ),
-                              hintStyle: const TextStyle(color: Colors.blue),
-                              contentPadding: const EdgeInsets.all(12.0),
+                              validator: (value) {
+                                // Добавляем валидацию
+                                if (value == null || value.isEmpty) {
+                                  return 'Заполните поле!';
+                                }
+                                return null;
+                              },
+                              onFieldSubmitted: (_) {
+                                if (_formKey.currentState!.validate()) {
+                                  _login();
+                                }
+                              },
                             ),
-                            onSubmitted: (_) {
-                              _login();
-                            },
                           ),
                         ),
                       );
@@ -276,13 +297,12 @@ class _AuthorizationState extends State<Authorization> {
     prefs.setString('lastName', user.lastName);
     prefs.setString('loginUser', user.loginUser);
     prefs.setString('nameRole', nameRole); // Сохраняем роль пользователя.
-    _showLoginMessage('Вход выполнен');
     print("Login function executed");
 
     user = await getUserInfoFromSharedPreferences();
 
     // Определение страницы на основе роли пользователя.
-    if (nameRole == "Блогер" || nameRole == "Модератор") {
+    if (nameRole == "Blogger" || nameRole == "Moderator") {
       _showLoginMessage('Вход выполнен');
 
       Navigator.pushReplacement(
@@ -292,7 +312,7 @@ class _AuthorizationState extends State<Authorization> {
           fullscreenDialog: false,
         ),
       );
-    } else if (nameRole == "Специалист службы поддержки") {
+    } else if (nameRole == "Support") {
       _showLoginMessage('Вход выполнен');
 
       Navigator.pushReplacement(

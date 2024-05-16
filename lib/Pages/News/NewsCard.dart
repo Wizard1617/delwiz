@@ -333,7 +333,7 @@ class _NewsCardState extends State<NewsCard> {
                         ],
                       ),
                     ),
-                    if(widget.news.idUser == int.parse(IDUser) || nameRole != 'Блогер')...[
+                    if(widget.news.idUser == int.parse(IDUser) || nameRole != 'Blogger')...[
 
                     PopupMenuButton<String>(
                       onSelected: (String result) async{

@@ -3,8 +3,8 @@ import 'package:dio/dio.dart';
 final dio = Dio();
 final http = HttpClientAdapter();
 
-String api = 'http://192.168.1.69:5108/api';
-String baseFileUrl = "http://192.168.1.69:5108/"; // Замените на ваш базовый URL
+String api = 'https://a26842-bb41.w.d-f.pw/api';
+String baseFileUrl = "https://a26842-bb41.w.d-f.pw/"; // Замените на ваш базовый URL
 
 var IDUser = '';
 
@@ -38,12 +38,12 @@ Future<Map<String, dynamic>> request(String login, String password) async {
 
 
 void registration(String firstName, String lastName, String login, String password) async{
-   await dio.post('$api/Users/register', data: {
+   await dio.post('$api/Users/', data: {
     'firstName': firstName,
     'lastName': lastName,
     'loginUser': login,
     'passwordUser': password,
-    'roleName': 'Блогер' // Отправляем название роли "Bloger"
+    'roleId': 2 // Отправляем название роли "Bloger"
   });
 }
 

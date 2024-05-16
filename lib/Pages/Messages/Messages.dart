@@ -34,7 +34,6 @@ class _MessengerScreenState extends State<MessengerScreen> {
           responseType: ResponseType.json,
         ),
       );
-
       if (response.statusCode == 200) {
         final List<dynamic> userChatsData = response.data;
 
@@ -45,7 +44,6 @@ class _MessengerScreenState extends State<MessengerScreen> {
         setState(() {
           userChats = newUserChats;
         });
-
         // Загружаем фото для каждого пользователя
         for (var userChat in userChats) {
           if (!photoImages.containsKey(userChat.senderId)) {

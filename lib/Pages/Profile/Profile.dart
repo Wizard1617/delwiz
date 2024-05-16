@@ -84,6 +84,7 @@ class _UserDetailsWidgetState extends State<UserDetailsWidget>
 
     setState(() {          isDataLoaded = true; // Обновляем флаг загрузки данных
     });
+
   }
 
 /*
@@ -252,7 +253,14 @@ class _UserDetailsWidgetState extends State<UserDetailsWidget>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-
+    if (!isDataLoaded ) {
+      // Возвращаем виджет загрузки, если данные не загружены или пользователь еще не инициализирован
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
 
     return Scaffold(
         body: DefaultTabController(

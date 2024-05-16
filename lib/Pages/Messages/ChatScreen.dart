@@ -30,7 +30,6 @@ import '../FriendAndUsers/UserProfile.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-/*const String _baseFileUrl = "http://192.168.1.69:5108/";*/ // Замените на ваш базовый URL
 /*
 */
 String newMessage = '';
@@ -78,7 +77,7 @@ class _ChatScreenState extends State<ChatScreen>   {
         // Разрешение предоставлено, можно продолжать загрузку файла
       } else {
         // Показываем уведомление, что разрешение не предоставлено
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Необходимо разрешение на доступ к хранилищу"),
         ));
       }
@@ -106,18 +105,15 @@ class _ChatScreenState extends State<ChatScreen>   {
           ));
         },
         child: VideoWidget(url: url),
-      );// Это ваш пользовательский виджет для видео
-   /*   case 'pdf':
-      // Используйте PDFViewer для отображения PDF
-        return PDFViewerWidget(url: url);*/ // Это ваш пользовательский виджет для PDF
+      ); // Это ваш пользовательский виджет для PDF
       case 'doc':
       case 'docx':
       case 'xls':
       case 'xlsx':
       // Кнопка для скачивания и открытия документа
         return ListTile(
-          leading: Icon(Icons.file_copy),
-          title: Text("Скачать и открыть документ"),
+          leading: const Icon(Icons.file_copy),
+          title: const Text("Скачать и открыть документ"),
           onTap: () async {
             // Запросите разрешение на доступ к хранилищу, если оно еще не предоставлено
             var status = await Permission.storage.request();
@@ -132,7 +128,7 @@ class _ChatScreenState extends State<ChatScreen>   {
                 openFileFromNotification: true,
               );
             } else {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 content: Text("Необходимо разрешение на доступ к хранилищу"),
               ));
             }
@@ -140,7 +136,7 @@ class _ChatScreenState extends State<ChatScreen>   {
         );
       default:
       // Если формат файла не поддерживается, отобразите иконку файла
-        return Icon(Icons.file_present);
+        return const Icon(Icons.file_present);
     }
   }
 
@@ -170,11 +166,11 @@ class _ChatScreenState extends State<ChatScreen>   {
         }
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Загрузка файла начата"),
       ));
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Необходимо разрешение на доступ к хранилищу"),
       ));
     }
@@ -424,7 +420,7 @@ class _ChatScreenState extends State<ChatScreen>   {
   void scrollToBottom() {
     _scrollController.animateTo(
       _scrollController.position.maxScrollExtent,
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       curve: Curves.easeOut,
     );
   }
@@ -449,10 +445,10 @@ class _ChatScreenState extends State<ChatScreen>   {
                     : const Icon(Icons.add_a_photo),
               ),
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Text(
               widget.nameUser,
-              style: TextStyle(fontSize: 18),
+              style: const TextStyle(fontSize: 18),
             ),
           ],
         ),
@@ -472,18 +468,18 @@ class _ChatScreenState extends State<ChatScreen>   {
 
                 return Column(
                   children: [
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
                       children: [
-                        if (!isSender) SizedBox(width: 10),
+                        if (!isSender) const SizedBox(width: 10),
                         Flexible(
                           child: ConstrainedBox(
                             constraints: BoxConstraints(
                               maxWidth: MediaQuery.of(context).size.width * 0.7,
                             ),
                             child: Container(
-                              padding: EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8.0),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(25.0),
                                 color: isSender ? Colors.deepOrangeAccent : Colors.grey[300],
@@ -498,7 +494,7 @@ class _ChatScreenState extends State<ChatScreen>   {
                                           text: message['message'],
                                           style: TextStyle(fontSize: 16, color: isSender ? Colors.white : Colors.black),
                                         ),
-                                        TextSpan(text: " "),
+                                        const TextSpan(text: " "),
                                         TextSpan(
                                           text: message['time'].length >= 16
                                               ? message['time'].substring(11, 16)
@@ -512,7 +508,7 @@ class _ChatScreenState extends State<ChatScreen>   {
                                       ? fileUrls.map((url) { // Если не пуст, создаём виджеты для файлов
                                     String extension = url.split('.').last;
                                     return Padding(
-                                      padding: EdgeInsets.only(top: 8.0),
+                                      padding: const EdgeInsets.only(top: 8.0),
                                       child: _buildFileWidget(url, extension, context),
                                     );
                                   }).toList()
@@ -522,10 +518,10 @@ class _ChatScreenState extends State<ChatScreen>   {
                             ),
                           ),
                         ),
-                        if (isSender) SizedBox(width: 10),
+                        if (isSender) const SizedBox(width: 10),
                       ],
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                   ],
                 );
               },
@@ -551,7 +547,7 @@ class _ChatScreenState extends State<ChatScreen>   {
                     decoration: InputDecoration(
                       hintText: 'Введите сообщение...',
                       suffixIcon: IconButton(
-                        icon: Icon(Icons.attach_file),
+                        icon: const Icon(Icons.attach_file),
                         onPressed: () async {
                           await _pickFile();
                         },
@@ -560,7 +556,7 @@ class _ChatScreenState extends State<ChatScreen>   {
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.send),
+                  icon: const Icon(Icons.send),
                   onPressed: () {
                     sendMessage();
                   },
@@ -586,6 +582,11 @@ class _ChatScreenState extends State<ChatScreen>   {
       }
       final response = await dio.post(
         '$api/MessageUsers',
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+          },
+        ),
         data: {
           'textMessage': textMessage,
           'sendingTime': sendingTime.toIso8601String(),
@@ -615,6 +616,11 @@ class _ChatScreenState extends State<ChatScreen>   {
       }
       final response = await dio.post(
         '$api/Support',
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+          },
+        ),
         data: {
           'textMessage': textMessage,
           'sendingTime': sendingTime.toIso8601String(),
@@ -692,7 +698,7 @@ class _ChatScreenState extends State<ChatScreen>   {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 200),
           curve: Curves.easeOut,
         );
       }

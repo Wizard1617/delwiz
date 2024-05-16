@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AchievementsTab extends StatelessWidget {
   final List<Map<String, String>> achievements = [
-    {
+   /* {
       "image": "assets/images/Bronze.png",
       "caption": "Отправить 100 сообщений",
     },
@@ -13,7 +13,7 @@ class AchievementsTab extends StatelessWidget {
     {
       "image": "assets/images/Gold.png",
       "caption": "Отправить 5000 сообщений",
-    },
+    },*/
   ];
 
   @override

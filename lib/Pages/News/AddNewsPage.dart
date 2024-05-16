@@ -109,7 +109,7 @@ class _AddNewsState extends State<AddNews> {
   Future<List<int>> _uploadMedia() async {
     List<int> pictureIds = [];
     Dio dio = Dio();
-    var apiUrl = 'http://192.168.1.69:5108/api/Pictures';
+    var apiUrl = '$api/Pictures';
 
     for (var media in _selectedMedia) {
       String? mimeType = lookupMimeType(media.path);
